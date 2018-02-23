@@ -1,6 +1,7 @@
 # byte-compiled, optimized, etc.
 __pycache__/
 *.py[cod]
+.vscode/*
 
 # building, packaging, etc.
 *.egg-info/
@@ -16,3 +17,4 @@ doc/_build/
 # testing
 .tox/
 .test_publish_key
+secrets.yml
