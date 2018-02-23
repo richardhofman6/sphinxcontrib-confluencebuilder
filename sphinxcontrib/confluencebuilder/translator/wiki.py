@@ -511,7 +511,8 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
     def _depart_list_type(self, node):
         self.list_stack.pop()
         if not self.table and not self.list_stack:
-            self.end_state()
+            self.add_text("\n") # in case first rendered line below the list starts with '*' (bolded text)
+            self.end_state(0)
 
     def visit_bullet_list(self, node):
         self._visit_list_type(ConflueceListType.BULLET)
@@ -532,6 +533,7 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
         pass
 
     def visit_list_item(self, node):
+        self.new_state(0)
         type = self.list_stack[-1]
         level = len(self.list_stack)
         if type == ConflueceListType.BULLET:
@@ -541,13 +543,11 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
         else:
             list_prefix = '-'
 
-        s = ''
-        for i in range(level):
-            s += list_prefix
+        s = '' + list_prefix * level
         self.add_text('%s ' % s)
 
     def depart_list_item(self, node):
-        pass
+        self.end_state(0)
 
     def visit_definition_list_item(self, node):
         self._li_terms = []
@@ -601,18 +601,18 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
         self.end_state(end=None)
 
     def visit_field_name(self, node):
-        self.add_text(':')
+        self.add_text('*')
 
     def depart_field_name(self, node):
-        self.add_text(':')
+        self.add_text('*: ')
         content = node.astext()
         self.add_text((16-len(content))*' ')
 
     def visit_field_body(self, node):
-        self.new_state(self.indent)
+        pass
 
     def depart_field_body(self, node):
-        self.end_state()
+        pass
 
     def visit_hlist(self, node):
         pass
