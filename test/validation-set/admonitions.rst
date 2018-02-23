@@ -49,3 +49,7 @@ This page shows the usage of the default admonitions set.
 .. warning::
 
    This is a "warning" block message.
+
+.. admonition:: Generic
+
+   This is a generic admonition/block message.

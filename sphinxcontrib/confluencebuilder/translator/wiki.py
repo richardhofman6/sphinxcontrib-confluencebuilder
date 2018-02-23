@@ -628,8 +628,16 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
 
     def visit_admonition(self, node):
         self.new_state(0)
+        if len(node.children) > 1:
+            title = node.children[0].astext()
+            del node.children[0] # remove title element so it isn't rendered in the body as well.
+        else:
+            title = ''
+
+        self.add_text('{info:title=%s|icon=false}' % title)
 
     def depart_admonition(self, node):
+        self.add_text('{info}')
         self.end_state()
 
     def _visit_info(self, node):
